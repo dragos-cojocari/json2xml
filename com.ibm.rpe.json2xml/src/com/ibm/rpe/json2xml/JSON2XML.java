@@ -1,43 +1,57 @@
 package com.ibm.rpe.json2xml;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 
+/**
+ * Utility to convert JSON to XML
+ * 
+ * @author Dragos Cojocari
+ *
+ */
 public class JSON2XML
 {
-	/*
-	public void convert( String jsonStr)
+	/**
+	 * Takes an JSON input stream and returns an XML output stream 
+	 * 
+	 * @param inputStream
+	 * @param outputStream
+	 * @throws IOException
+	 */
+	public void convert( InputStream inputStream, OutputStream outputStream) throws IOException
 	{
-		JsonParser parser = new JsonParser();
-		JsonObject o = (JsonObject)parser.parse( jsonStr);
+		StringWriter writer = new StringWriter();
+		IOUtils.copy( inputStream, writer, "UTF-8");
+		String jsonStr = writer.toString();
 		
-		System.out.println( o.toString());
-	}
-	*/
-
-	public void convert( String jsonStr)
-	{
 		JSONObject o = new JSONObject(jsonStr);
+		
 		String xml = org.json.XML.toString(o);
 		
-		System.out.println( xml);
+		IOUtils.write(xml, outputStream, "UTF-8");
 	}
 
 	public static void main(String[] args) throws IOException
 	{
-		InputStream stream =  JSON2XML.class.getResourceAsStream("/test/test1.json");
-		StringWriter writer = new StringWriter();
-		IOUtils.copy(stream, writer, "UTF-8");
-		String jsonStr = writer.toString();
-
-		System.out.println( jsonStr);
+		if ( args.length != 2)
+		{
+			System.err.println( "Invalid number of arguments. Syntax is: json2xml <jsonInputPath> <xmlOutputPath>");
+			return;
+		}
 		
-		new JSON2XML().convert( jsonStr);
-
+		InputStream jsonStream =  new FileInputStream( new File(args[0]));
+		
+		OutputStream outputStream =  new FileOutputStream( new File(args[1]));
+		
+		new JSON2XML().convert( jsonStream, outputStream);
 	}
 
 }
