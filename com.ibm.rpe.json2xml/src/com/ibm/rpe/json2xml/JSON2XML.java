@@ -26,7 +26,7 @@ public class JSON2XML
 	 * @param outputStream
 	 * @throws IOException
 	 */
-	public void convert( InputStream inputStream, OutputStream outputStream) throws IOException
+	public void json2xml( InputStream inputStream, OutputStream outputStream) throws IOException
 	{
 		StringWriter writer = new StringWriter();
 		IOUtils.copy( inputStream, writer, "UTF-8");
@@ -51,7 +51,7 @@ public class JSON2XML
 		
 		OutputStream outputStream =  new FileOutputStream( new File(args[1]));
 		
-		new JSON2XML().convert( jsonStream, outputStream);
+		new JSON2XML().json2xml( jsonStream, outputStream);
 	}
 
 }
